@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_background01"
+    android:background="@drawable/ic_bg_login"
     android:padding="23dp"
     tools:context=".MainActivity">
 
@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_main_logo" />
+        app:srcCompat="@drawable/main_logo_rounded" />
 
     <TextView
         android:id="@+id/tvTitle"
