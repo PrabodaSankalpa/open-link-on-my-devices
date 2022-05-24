@@ -4,28 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DashboardActivity"
-    android:background="@drawable/ic_bg_dashboard">
+    android:background="@drawable/ic_bg_dashboard"
+    tools:context=".DashboardActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/dashboardToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Welcome"
+            app:titleTextColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/ivLogOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/dashboardToolBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_logout" />
+
+        <ImageView
+            android:id="@+id/ivPay"
+            android:layout_width="27dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivInfo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/crown" />
+
+        <ImageView
+            android:id="@+id/ivInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivLogOut"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_info" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tvEmail"
+        android:id="@+id/tvDisplayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="80dp"
+        android:text="Display Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnLogOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
 </androidx.constraintlayout.widget.ConstraintLayout>

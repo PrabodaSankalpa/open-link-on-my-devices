@@ -1,6 +1,5 @@
 package com.example.openlinkonmydevices
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -17,16 +16,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
+    private var backPressTime = 0L
 
     private companion object{
         private const val RC_SIGN_IN = 100
@@ -67,6 +62,15 @@ class MainActivity : AppCompatActivity() {
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
         }
+    }
+
+    override fun onBackPressed() {
+        if (backPressTime + 2000 > System.currentTimeMillis()){
+            super.onBackPressed()
+        }else{
+            Toast.makeText(this@MainActivity, "Press Again to exit", Toast.LENGTH_SHORT).show()
+        }
+        backPressTime = System.currentTimeMillis()
     }
 
     private fun checkUser() {
