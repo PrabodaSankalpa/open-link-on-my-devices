@@ -74,7 +74,7 @@
         app:layout_constraintVertical_bias="0.148" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivDeviceImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
@@ -93,7 +93,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/ivDeviceImage" />
 
     <EditText
         android:id="@+id/etUrl"
@@ -135,11 +135,11 @@
         app:layout_constraintTop_toBottomOf="@+id/spinnerDevices" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivUpdateDeviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@+id/tvDeviceName"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/ivDeviceImage"
         app:srcCompat="@drawable/ic_edit" />
 </androidx.constraintlayout.widget.ConstraintLayout>

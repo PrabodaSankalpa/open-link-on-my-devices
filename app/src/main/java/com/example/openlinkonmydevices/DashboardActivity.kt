@@ -5,10 +5,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.openlinkonmydevices.databinding.ActivityDashboardBinding
+import com.example.openlinkonmydevices.databinding.EditDeviceNameBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -55,7 +58,26 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         //On load function to get device information
-        retrieveDevice()
+        //retrieveDevice()
+        realtimeGetDeviceName()
+
+        //Update device name
+        binding.ivUpdateDeviceName.setOnClickListener {
+            val mBuilder = AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_edit)
+                .setTitle("Update Device Name")
+
+            val li = LayoutInflater.from(this)
+            val editDeviceNameBinding = EditDeviceNameBinding.inflate(li)
+            mBuilder.setView(editDeviceNameBinding.root)
+
+            mBuilder.setPositiveButton("Update"){_, _ ->
+                val deviceNewName = editDeviceNameBinding.etDeviceName.text.toString().trim()
+                updateDeviceName(deviceNewName)
+            }
+            mBuilder.create()
+            mBuilder.show()
+        }
 
     }
 
@@ -81,51 +103,114 @@ class DashboardActivity : AppCompatActivity() {
         backPressTime = System.currentTimeMillis()
     }
 
-    private fun retrieveDevice() = CoroutineScope(Dispatchers.IO).launch {
-        try{
-            var querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
-            val sb = StringBuilder()
-            if(querySnapshot.isEmpty){
-                val device = Device(userDeviceId, "My Mobile")
-                saveDevice(device)
-                querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
-            }
-            for (document in querySnapshot.documents){
-                val device = document.toObject<Device>()
-                if (device != null) {
-                    if (device.deviceId == userDeviceId){
-                        sb.append("${device.deviceName}\n")
+    private fun updateDeviceName(deviceNewName: String) = CoroutineScope(Dispatchers.IO).launch {
+        val deviceQuery = Firebase.firestore.collection(nameOfTheCollection)
+            .whereEqualTo("deviceId", userDeviceId)
+            .get()
+            .await()
+        if (deviceQuery.documents.isNotEmpty()) {
+            for (document in deviceQuery) {
+                try {
+
+                    val map = mutableMapOf<String, Any>()
+                    if (deviceNewName != "") {
+                        map["deviceName"] = deviceNewName
+
+                        Firebase.firestore.collection(nameOfTheCollection).document(document.id)
+                            .set(
+                                map,
+                                SetOptions.merge()
+                            ).await()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@DashboardActivity, e.message, Toast.LENGTH_SHORT).show()
                     }
                 }
-
-            }
-            if(sb.isEmpty()){
-                val device = Device(userDeviceId, "My Mobile")
-                saveDevice(device)
-                querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
-
-                for (document in querySnapshot.documents){
-                    val device = document.toObject<Device>()
-                    if (device != null) {
-                        if (device.deviceId == userDeviceId){
-                            sb.append("${device.deviceName}\n")
-                        }
-                    }
-
-                }
-
-            }
-
-            withContext(Dispatchers.Main){
-                binding.tvDeviceName.text = sb.toString()
-            }
-
-        }catch (e: Exception){
-            withContext(Dispatchers.Main){
-                Toast.makeText(this@DashboardActivity, e.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+    private fun realtimeGetDeviceName(){
+        Firebase.firestore.collection(nameOfTheCollection).addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            firebaseFirestoreException?.let {
+                Toast.makeText(this@DashboardActivity, it.message, Toast.LENGTH_LONG).show()
+                return@addSnapshotListener
+            }
+            if(querySnapshot == null){
+                val device = Device(userDeviceId, "My Mobile")
+                saveDevice(device)
+            }
+            querySnapshot?.let {
+                val sb = StringBuilder()
+                for (document in it){
+                    val device = document.toObject<Device>()
+                        if (device.deviceId == userDeviceId){
+                            sb.append(device.deviceName)
+                        }
+                }
+                if(sb.isEmpty()){
+                    val device = Device(userDeviceId, "My Mobile")
+                    saveDevice(device)
+
+                    for (document in it){
+                        val device = document.toObject<Device>()
+                            if (device.deviceId == userDeviceId){
+                                sb.append(device.deviceName)
+                            }
+                    }
+                }
+                binding.tvDeviceName.text = sb.toString()
+            }
+        }
+    }
+
+
+//    private fun retrieveDevice() = CoroutineScope(Dispatchers.IO).launch {
+//        try{
+//            var querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
+//            val sb = StringBuilder()
+//            if(querySnapshot.isEmpty){
+//                val device = Device(userDeviceId, "My Mobile")
+//                saveDevice(device)
+//                querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
+//            }
+//            for (document in querySnapshot.documents){
+//                val device = document.toObject<Device>()
+//                if (device != null) {
+//                    if (device.deviceId == userDeviceId){
+//                        sb.append(device.deviceName)
+//                    }
+//                }
+//
+//            }
+//            if(sb.isEmpty()){
+//                val device = Device(userDeviceId, "My Mobile")
+//                saveDevice(device)
+//                querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
+//
+//                for (document in querySnapshot.documents){
+//                    val device = document.toObject<Device>()
+//                    if (device != null) {
+//                        if (device.deviceId == userDeviceId){
+//                            sb.append(device.deviceName)
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+//
+//            withContext(Dispatchers.Main){
+//                binding.tvDeviceName.text = sb.toString()
+//            }
+//
+//        }catch (e: Exception){
+//            withContext(Dispatchers.Main){
+//                Toast.makeText(this@DashboardActivity, e.message, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
     private fun saveDevice(device: Device) = CoroutineScope(Dispatchers.IO).launch {
             try {
