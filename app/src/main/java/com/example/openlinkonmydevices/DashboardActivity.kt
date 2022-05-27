@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import com.example.openlinkonmydevices.databinding.ActivityDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,8 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     private var backPressTime = 0L
-    var nameOfTheCollection: String = ""
+    private var nameOfTheCollection: String = ""
+    private var userDeviceId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,7 @@ class DashboardActivity : AppCompatActivity() {
         checkUser()
 
         nameOfTheCollection = getCollectionName()
+        userDeviceId = getDeviceId(this)
 
         val logOutDialog = AlertDialog.Builder(this)
             .setTitle("Logout")
@@ -51,11 +54,8 @@ class DashboardActivity : AppCompatActivity() {
             logOutDialog.show()
         }
 
-        binding.btnSubmit.setOnClickListener{
-            val device = Device(getDeviceId(this), "Redmi")
-            saveDevice(device)
-        }
-        binding.tvDeviceName.text = nameOfTheCollection
+        //On load function to get device information
+        retrieveDevice()
 
     }
 
@@ -81,6 +81,51 @@ class DashboardActivity : AppCompatActivity() {
         backPressTime = System.currentTimeMillis()
     }
 
+    private fun retrieveDevice() = CoroutineScope(Dispatchers.IO).launch {
+        try{
+            var querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
+            val sb = StringBuilder()
+            if(querySnapshot.isEmpty){
+                val device = Device(userDeviceId, "My Mobile")
+                saveDevice(device)
+                querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
+            }
+            for (document in querySnapshot.documents){
+                val device = document.toObject<Device>()
+                if (device != null) {
+                    if (device.deviceId == userDeviceId){
+                        sb.append("${device.deviceName}\n")
+                    }
+                }
+
+            }
+            if(sb.isEmpty()){
+                val device = Device(userDeviceId, "My Mobile")
+                saveDevice(device)
+                querySnapshot = Firebase.firestore.collection(nameOfTheCollection).get().await()
+
+                for (document in querySnapshot.documents){
+                    val device = document.toObject<Device>()
+                    if (device != null) {
+                        if (device.deviceId == userDeviceId){
+                            sb.append("${device.deviceName}\n")
+                        }
+                    }
+
+                }
+
+            }
+
+            withContext(Dispatchers.Main){
+                binding.tvDeviceName.text = sb.toString()
+            }
+
+        }catch (e: Exception){
+            withContext(Dispatchers.Main){
+                Toast.makeText(this@DashboardActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun saveDevice(device: Device) = CoroutineScope(Dispatchers.IO).launch {
             try {
