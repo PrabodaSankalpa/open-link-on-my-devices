@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.openlinkonmydevices.databinding.ActivityDashboardBinding
@@ -28,6 +29,7 @@ class DashboardActivity : AppCompatActivity() {
     private var backPressTime = 0L
     private var nameOfTheCollection: String = ""
     private var userDeviceId: String = ""
+    var deviceList = listOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +81,10 @@ class DashboardActivity : AppCompatActivity() {
             mBuilder.show()
         }
 
+        //Get All the devices list and append to the spinner
+        getAllOtherDevices()
+
+
     }
 
     private fun getDeviceId(context: Context): String{
@@ -101,6 +107,30 @@ class DashboardActivity : AppCompatActivity() {
             Toast.makeText(this@DashboardActivity, "Press Again to exit", Toast.LENGTH_SHORT).show()
         }
         backPressTime = System.currentTimeMillis()
+    }
+
+    private fun getAllOtherDevices() {
+        Firebase.firestore.collection(nameOfTheCollection).whereNotEqualTo("deviceId", userDeviceId)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                firebaseFirestoreException?.let {
+                    Toast.makeText(this@DashboardActivity, it.message, Toast.LENGTH_LONG).show()
+                    return@addSnapshotListener
+                }
+
+                querySnapshot?.let {
+                    if (querySnapshot.isEmpty){
+                        deviceList = deviceList + "-No Other Devices-"
+                    }else {
+                        deviceList = emptyList()
+                        for (document in it) {
+                            val device = document.toObject<Device>()
+                            deviceList = deviceList + device.deviceName
+                        }
+                    }
+                }
+                val adapter = ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, deviceList)
+                binding.spinnerDevices.adapter = adapter
+            }
     }
 
     private fun updateDeviceName(deviceNewName: String) = CoroutineScope(Dispatchers.IO).launch {
