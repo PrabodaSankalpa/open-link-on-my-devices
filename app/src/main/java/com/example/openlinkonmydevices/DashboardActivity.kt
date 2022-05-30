@@ -21,6 +21,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import android.text.Editable
+
+import android.util.Patterns
+
+import android.text.TextWatcher
+
+
+
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
@@ -84,6 +92,28 @@ class DashboardActivity : AppCompatActivity() {
         //Get All the devices list and append to the spinner
         getAllOtherDevices()
 
+        //Get Receive Link
+        var receiveLink = intent.getStringExtra("EXTRA_INCOME_LINK")
+        if (receiveLink != null){
+            binding.etUrl.setText(receiveLink)
+        }
+        binding.etUrl.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            // whenever text size changes it will check
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // if text written matches the pattern then
+                // it will show a toast of pattern matches
+                if (Patterns.WEB_URL.matcher(binding.etUrl.getText().toString()).matches()) {
+                    Toast.makeText(this@DashboardActivity, "Perfect URL", Toast.LENGTH_SHORT).show()
+                } else {
+                    // otherwise show error of invalid url
+                    binding.etUrl.setError("Invalid URL")
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
 
     }
 

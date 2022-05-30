@@ -105,6 +105,7 @@
         android:hint="Enter URL here..."
         android:inputType="textUri"
         android:paddingStart="12dp"
+        android:paddingEnd="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +120,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUrl" />
+        app:layout_constraintTop_toBottomOf="@+id/etUrl"
+        android:contentDescription="All Other Devices"/>
 
     <Button
         android:id="@+id/btnSubmit"
@@ -142,4 +144,5 @@
         app:layout_constraintStart_toEndOf="@+id/tvDeviceName"
         app:layout_constraintTop_toBottomOf="@+id/ivDeviceImage"
         app:srcCompat="@drawable/ic_edit" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

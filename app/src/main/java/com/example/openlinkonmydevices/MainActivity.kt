@@ -1,9 +1,6 @@
 package com.example.openlinkonmydevices
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,23 +19,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
     private var backPressTime = 0L
+    private var receiveLink: String? = null
 
     private companion object{
         private const val RC_SIGN_IN = 100
         private const val TAG = "GOOGLE_SIGN_IN_TAG"
-    }
-
-    private fun checkInternet(){
-        val connManager: ConnectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val wifiConn: NetworkInfo? = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        val mobileDataConn: NetworkInfo? = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-        if (wifiConn!!.isConnectedOrConnecting){
-            if (mobileDataConn!!.isConnectedOrConnecting){
-            }else{
-                Toast.makeText(this@MainActivity, "No Internet!", Toast.LENGTH_LONG).show()
-                finish()
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +31,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setTheme(R.style.Theme_OpenLinkOnMyDevices)
         setContentView(binding.root)
+
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                when (intent.type) {
+                    "text/plain" -> handleSendText(intent)
+                }
+            }
+        }
 
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -76,7 +69,9 @@ class MainActivity : AppCompatActivity() {
     private fun checkUser() {
         val firebaseUser = firebaseAuth.currentUser
         if (firebaseUser != null){
-            startActivity(Intent(this@MainActivity, DashboardActivity::class.java))
+            startActivity(Intent(this@MainActivity, DashboardActivity::class.java). also {
+                it.putExtra("EXTRA_INCOME_LINK", receiveLink)
+            })
             finish()
         }
     }
@@ -129,5 +124,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "LogIn Failed due to ${e.message}", Toast.LENGTH_SHORT).show()
 
             }
+    }
+    private fun handleSendText(intent: Intent) {
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+            receiveLink = it
+        }
     }
 }
