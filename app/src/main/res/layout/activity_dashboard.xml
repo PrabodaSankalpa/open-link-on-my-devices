@@ -104,6 +104,7 @@
         android:ems="10"
         android:hint="Enter URL here..."
         android:inputType="textUri"
+        android:maxLength="2050"
         android:paddingStart="12dp"
         android:paddingEnd="6dp"
         app:layout_constraintEnd_toEndOf="parent"

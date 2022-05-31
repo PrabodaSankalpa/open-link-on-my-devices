@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:maxLength="20"
+        android:maxLength="30"
         android:inputType="textPersonName"
         android:hint="Enter New Name..."
         app:layout_constraintEnd_toEndOf="parent"

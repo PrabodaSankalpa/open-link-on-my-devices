@@ -2,6 +2,7 @@ package com.example.openlinkonmydevices
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
@@ -26,8 +27,11 @@ import android.text.Editable
 import android.util.Patterns
 
 import android.text.TextWatcher
-
-
+import android.view.View
+import android.webkit.URLUtil.isValidUrl
+import android.widget.AdapterView
+import androidx.annotation.RequiresApi
+import java.time.LocalDateTime
 
 
 class DashboardActivity : AppCompatActivity() {
@@ -36,9 +40,12 @@ class DashboardActivity : AppCompatActivity() {
 
     private var backPressTime = 0L
     private var nameOfTheCollection: String = ""
+    private var nameOfTheLinkCollection: String = ""
+    private var receiverDeviceName: String = ""
     private var userDeviceId: String = ""
     var deviceList = listOf<String>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
@@ -49,6 +56,7 @@ class DashboardActivity : AppCompatActivity() {
         checkUser()
 
         nameOfTheCollection = getCollectionName()
+        nameOfTheLinkCollection = getLinksCollectionName()
         userDeviceId = getDeviceId(this)
 
         val logOutDialog = AlertDialog.Builder(this)
@@ -115,6 +123,34 @@ class DashboardActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable) {}
         })
 
+        binding.spinnerDevices.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                receiverDeviceName = parent?.getItemAtPosition(position).toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
+        binding.btnSubmit.setOnClickListener {
+            val userUrl = binding.etUrl.text.toString().trim()
+
+            if (receiverDeviceName == "-No Other Devices-"){
+                Toast.makeText(this@DashboardActivity, "Please configure the receiving device", Toast.LENGTH_SHORT).show()
+            }else if (userUrl.isEmpty() || !isValidUrl(userUrl)){
+                Toast.makeText(this@DashboardActivity, "Please enter URL", Toast.LENGTH_SHORT).show()
+            }else{
+                val link = Link(receiverDeviceName,userUrl, LocalDateTime.now())
+                saveLink(link)
+            }
+        }
+
     }
 
     private fun getDeviceId(context: Context): String{
@@ -127,6 +163,14 @@ class DashboardActivity : AppCompatActivity() {
            if (firebaseUser != null) {
                 userCustomCollection = firebaseUser.uid + "_devices"
             }
+        return userCustomCollection
+    }
+    private fun getLinksCollectionName(): String {
+        val firebaseUser = firebaseAuth.currentUser
+        var userCustomCollection = ""
+        if (firebaseUser != null) {
+            userCustomCollection = firebaseUser.uid + "_links"
+        }
         return userCustomCollection
     }
 
@@ -149,6 +193,7 @@ class DashboardActivity : AppCompatActivity() {
 
                 querySnapshot?.let {
                     if (querySnapshot.isEmpty){
+                        deviceList = emptyList()
                         deviceList = deviceList + "-No Other Devices-"
                     }else {
                         deviceList = emptyList()
@@ -283,6 +328,18 @@ class DashboardActivity : AppCompatActivity() {
                     Toast.makeText(this@DashboardActivity, e.message, Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+    private fun saveLink(link: Link) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            Firebase.firestore.collection(nameOfTheLinkCollection).add(link).await()
+            withContext(Dispatchers.Main){
+                Toast.makeText(this@DashboardActivity, "Successful", Toast.LENGTH_SHORT).show()
+            }
+        }catch (e: Exception){
+            withContext(Dispatchers.Main){
+                Toast.makeText(this@DashboardActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun checkUser() {
