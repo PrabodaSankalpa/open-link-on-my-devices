@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/splashScreenTheme"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9687020796107431~4346694414"/>
         <activity
             android:name=".DashboardActivity"
             android:exported="false"

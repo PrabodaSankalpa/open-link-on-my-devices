@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/activity_dashboard.xml" value="0.16944444444444445" />
+        <entry key="..\:/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/activity_main.xml" value="0.16944444444444445" />
+        <entry key="..\:/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/edit_device_name.xml" value="0.1265625" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/drawable/ic_background01.xml" value="0.2595" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/drawable/ic_bg_dashboard.xml" value="0.2595" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2595" />
@@ -11,7 +14,7 @@
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/drawable/ic_main_logo_rounded.xml" value="0.2595" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/drawable/login_button.xml" value="0.2595" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/drawable/splash_screen.xml" value="0.2595" />
-        <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/activity_dashboard.xml" value="0.264" />
+        <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/activity_dashboard.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/layout/edit_device_name.xml" value="0.264" />
         <entry key="..\:/Users/Praboda/Desktop/File/Projects/Commercial Project/Open Link On My Devices/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.234" />

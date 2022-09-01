@@ -77,7 +77,7 @@
         android:id="@+id/ivDeviceImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="90dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,12 +117,12 @@
         android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="All Other Devices"
         android:paddingStart="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUrl"
-        android:contentDescription="All Other Devices"/>
+        app:layout_constraintTop_toBottomOf="@+id/etUrl" />
 
     <Button
         android:id="@+id/btnSubmit"
@@ -145,5 +145,18 @@
         app:layout_constraintStart_toEndOf="@+id/tvDeviceName"
         app:layout_constraintTop_toBottomOf="@+id/ivDeviceImage"
         app:srcCompat="@drawable/ic_edit" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

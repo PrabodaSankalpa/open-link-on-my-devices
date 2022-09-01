@@ -31,12 +31,22 @@ import android.view.View
 import android.webkit.URLUtil.isValidUrl
 import android.widget.AdapterView
 import androidx.annotation.RequiresApi
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.OnUserEarnedRewardListener
 import java.time.LocalDateTime
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private var mInterstitialAd: InterstitialAd? = null
+    private var mRewardedAd: RewardedAd? = null
 
     private var backPressTime = 0L
     private var nameOfTheCollection: String = ""
@@ -51,6 +61,31 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setTheme(R.style.Theme_OpenLinkOnMyDevices)
         setContentView(binding.root)
+
+        MobileAds.initialize(this@DashboardActivity)
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
+
+        var interstitialAdRequest = AdRequest.Builder().build()
+        InterstitialAd.load(this@DashboardActivity,"ca-app-pub-3940256099942544/1033173712", interstitialAdRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                mInterstitialAd = interstitialAd
+            }
+        })
+
+        RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                mRewardedAd = null
+            }
+
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                mRewardedAd = rewardedAd
+            }
+        })
 
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
@@ -148,6 +183,7 @@ class DashboardActivity : AppCompatActivity() {
             }else{
                 val link = Link(receiverDeviceName,userUrl, LocalDateTime.now())
                 saveLink(link)
+                binding.etUrl.getText().clear()
             }
         }
 
@@ -176,6 +212,11 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (backPressTime + 2000 > System.currentTimeMillis()){
+            if (mRewardedAd != null) {
+                mRewardedAd?.show(this@DashboardActivity, OnUserEarnedRewardListener() {
+                    Toast.makeText(this@DashboardActivity, "Now you can close the add", Toast.LENGTH_SHORT).show()
+                })
+            }
             super.onBackPressed()
         }else{
             Toast.makeText(this@DashboardActivity, "Press Again to exit", Toast.LENGTH_SHORT).show()
@@ -334,6 +375,9 @@ class DashboardActivity : AppCompatActivity() {
             Firebase.firestore.collection(nameOfTheLinkCollection).add(link).await()
             withContext(Dispatchers.Main){
                 Toast.makeText(this@DashboardActivity, "Successful", Toast.LENGTH_SHORT).show()
+                if (mInterstitialAd != null) {
+                    mInterstitialAd?.show(this@DashboardActivity)
+                }
             }
         }catch (e: Exception){
             withContext(Dispatchers.Main){
