@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Open Link On My Devices</string>
+    <string name="website_url">
+        Visit Our Website\n
+        <a href="https://open-link-on-my-devices.firebaseapp.com">Goto Website</a>\n\n\n
+        Subscribe to the channel\n
+        If you have any problems or issues\n
+        or you want to learn more\n
+        about the app and software,\n
+        the best resource is\n
+        the YouTube channel.\n
+        <a href="https://www.youtube.com/channel/UCThSBt0n0JVmGnb9HA6InyA">Visit Our YouTube Channel</a>\n\n\n
+        Like and Follow Us On:\n\n
+        <a href="https://open-link-on-my-devices.firebaseapp.com">Facebook</a>\n\n
+        <a href="https://open-link-on-my-devices.firebaseapp.com">TikTok</a>\n\n\n
+
+        <a href="https://open-link-on-my-devices.firebaseapp.com">Buy me a coffee</a>
+
+    </string>
+
+
 </resources>

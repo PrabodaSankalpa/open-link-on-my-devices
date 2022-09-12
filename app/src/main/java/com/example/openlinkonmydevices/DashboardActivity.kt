@@ -187,6 +187,12 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
 
+        binding.ivInfo.setOnClickListener{
+            Intent(this@DashboardActivity, InfoActivity::class.java).also {
+                startActivity(it)
+            }
+        }
+
     }
 
     private fun getDeviceId(context: Context): String{

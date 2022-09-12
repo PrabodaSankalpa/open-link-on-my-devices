@@ -39,16 +39,6 @@
             app:srcCompat="@drawable/ic_logout" />
 
         <ImageView
-            android:id="@+id/ivPay"
-            android:layout_width="27dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ivInfo"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/crown" />
-
-        <ImageView
             android:id="@+id/ivInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
