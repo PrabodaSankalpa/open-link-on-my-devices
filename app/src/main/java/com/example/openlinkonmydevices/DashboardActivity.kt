@@ -67,7 +67,7 @@ class DashboardActivity : AppCompatActivity() {
         binding.adView.loadAd(adRequest)
 
         var interstitialAdRequest = AdRequest.Builder().build()
-        InterstitialAd.load(this@DashboardActivity,"ca-app-pub-3940256099942544/1033173712", interstitialAdRequest, object : InterstitialAdLoadCallback() {
+        InterstitialAd.load(this@DashboardActivity,"ca-app-pub-9687020796107431/8438417432", interstitialAdRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 mInterstitialAd = null
             }
@@ -77,7 +77,7 @@ class DashboardActivity : AppCompatActivity() {
             }
         })
 
-        RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+        RewardedAd.load(this,"ca-app-pub-9687020796107431/3924457358", adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 mRewardedAd = null
             }

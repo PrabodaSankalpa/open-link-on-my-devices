@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        'RELEASE SHA1' {
+            storeFile file('C:\\AndroidKeyStore\\MyKeyStoreFile.jks')
+            storePassword '15947P.s'
+            keyAlias 'openlinkonmydevices'
+            keyPassword '15947P.s'
+        }
+    }
     compileSdk 32
 
     defaultConfig {
@@ -15,6 +23,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.'RELEASE SHA1'
     }
 
     buildTypes {
